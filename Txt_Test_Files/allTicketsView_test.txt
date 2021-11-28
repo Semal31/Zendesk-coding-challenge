@@ -1,0 +1,5 @@
+  ID  Created At            Updated At            Priority    Status    Subject
+----  --------------------  --------------------  ----------  --------  ---------------------------------------------
+   1  2021-11-26T18:24:43Z  2021-11-26T18:24:43Z  normal      open      Sample ticket: Meet the ticket
+   2  2021-11-26T18:41:26Z  2021-11-26T18:41:26Z  N/A         open      velit eiusmod reprehenderit officia cupidatat
+   3  2021-11-26T18:41:26Z  2021-11-26T18:41:26Z  N/A         open      excepteur laborum ex occaecat Lorem

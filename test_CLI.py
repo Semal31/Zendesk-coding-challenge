@@ -1,4 +1,3 @@
-import pytest
 from helper import getInput, printTickets
 
 # wanted to put all helper tests in their own class but setattr would not work in the class

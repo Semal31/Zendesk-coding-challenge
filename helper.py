@@ -59,5 +59,5 @@ def printDescription(ticket):
     print("****PROGRAM ERROR: Correct formatted data not received from API call****")
 
   if not error:
-    print(f"\n {description} \n")
+    print(f"\n {description}")
   

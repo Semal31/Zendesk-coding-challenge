@@ -1,5 +1,4 @@
 import textwrap
-import sys
 from tabulate import tabulate
 
 def getInput(prompt, constraint):

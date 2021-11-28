@@ -7,16 +7,17 @@ load_dotenv()
 
 USER_NAME = os.environ.get("API_USER")
 API_TOKEN = os.environ.get("API_TOKEN")
+SUBDOMAIN = os.environ.get("SUBDOMAIN")
 DIGIT = 'digit'
 
 def getJsonData(link):
   return (requests.get(link, auth=(USER_NAME, API_TOKEN))).json()
 
 def main():
-  allTicketsUrl = "https://zcc2793.zendesk.com/api/v2/tickets.json?page[size]=25"
+  allTicketsUrl = f"https://{SUBDOMAIN}.zendesk.com/api/v2/tickets.json?page[size]=25"
   r = requests.get(allTicketsUrl, auth=(USER_NAME, API_TOKEN))
   if r.status_code != 200:
-    print("Cannot establish a connection to the api right now. Please check the authorization credentials or try again later")
+    print("Cannot establish a connection to the API right now. Please check the authorization credentials or try again later")
     exit(1)
   r = r.json()
 
@@ -92,7 +93,7 @@ def main():
       viewingIndivTicket = True
       while viewingIndivTicket:
         inputIndivTicket = getInput(individualTicketPrompt1, DIGIT)
-        url = f"https://zcc2793.zendesk.com/api/v2/search.json?query={inputIndivTicket}"
+        url = f"https://{SUBDOMAIN}.zendesk.com/api/v2/search.json?query={inputIndivTicket}"
         r = getJsonData(url)
         if r['count'] == 0:
           print(individualTicketPrompt2)

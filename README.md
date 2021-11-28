@@ -15,7 +15,7 @@ $ pip3 install -r requirements.txt
 $ python3 main.py
 ```
 - **NOTE:** When running the program if the format of the table does not look right or match the format below you will need the shell wider
-  - There is an issue where the text will not wrap correctly if the shell window length is not wide enough 
+  - There is an issue where the text will not wrap correctly if the shell window width is not wide enough 
 2. If the program connected to the API correctly you should get the welcome message:
 ```
 Welcome to the ticket viewer V1

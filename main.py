@@ -1,113 +1,106 @@
 import os 
 import requests
+from helper import *
 
 from dotenv import load_dotenv
 load_dotenv()
 
 USER_NAME = os.environ.get("API_USER")
 API_TOKEN = os.environ.get("API_TOKEN")
+DIGIT = 'digit'
 
-url = "https://zcc2793.zendesk.com/api/v2/tickets.json?page[size]=25"
-r = requests.get(url, auth=(USER_NAME, API_TOKEN))
+allTicketsUrl = "https://zcc2793.zendesk.com/api/v2/tickets.json?page[size]=25"
+r = requests.get(allTicketsUrl, auth=(USER_NAME, API_TOKEN))
 if r.status_code != 200:
   print("Cannot establish a connection to the api right now. Please check the authorization credentials or try again later")
   exit(1)
 r = r.json()
 
 done = False
-mainPrompt = "Welcome to the ticket viewer V1\nThe options are as follows:\n    'h' to view this menu again\n    'a' to view all tickets\n    'i' to select an individual ticket to view\n    'q' to quit the application"
-allTicketsPrompt1 = "'q' to stop viewing"
-allTicketsPrompt2 = "'2' for the next page || 'q' to stop viewing"
-allTicketsPrompt3 = "'1' for the previous page || '2' for the next page || 'q' to stop viewing"
-allTicketsPrompt4 = "'1' for the previous page || 'q' to stop viewing"
+mainPrompt = "Welcome to the ticket viewer V1\nThe options are as follows:\n    'a' to view all tickets\n    'i' to select an individual ticket to view\n    'q' to quit the application"
+mainOptions = ['a', 'i', 'q']
+allTicketsPrompt1 = "'q' to return to the main menu"
+allTicketsPrompt2 = "'2' for the next page || 'q' to return to the main menu"
+allTicketsPrompt3 = "'1' for the previous page || '2' for the next page || 'q' to return to the main menu"
+allTicketsPrompt4 = "'1' for the previous page || 'q' to return to the main menu"
 individualTicketPrompt1 = "What is the id of the ticket you would like to view?"
-individualTicketPrompt2 = "'1' to input another ticket id to view || 'q' to stop viewing"
-options = ['h', 'a', 'i', 'q']
-viewingAllTicketsOptions = ['1', 'q', '2']
+individualTicketPrompt2 = "No ticket with this id found."
+individualTicketPrompt3 = "'1' to input another ticket id to view || 'q' to return to the main menu"
+viewingTicketsOptions = ['1', 'q', '2']
 
-while not done:
-  print(mainPrompt)
-  inputOption = input()
-  while (inputOption not in options):
-    print(mainPrompt)
-    inputOption = input()
-  if inputOption == options[3]:
-    done = True
-  elif inputOption == options[0]:
-    continue
-  elif inputOption == options[1]:
-    pageCounter = 0
-    viewingAllTickets = True
-    while viewingAllTickets:
-      print(f"{r['tickets'][0]['id']} \n")
+def getJsonData(link):
+  return (requests.get(link, auth=(USER_NAME, API_TOKEN))).json()
 
-      if pageCounter == 0 and not r['meta']['has_more']:
-        print(allTicketsPrompt1)
-        inputAllTickets = input()
-        while inputAllTickets != viewingAllTicketsOptions[1]:
-          print(allTicketsPrompt1)
-          inputAllTickets = input()
-        if inputAllTickets == viewingAllTicketsOptions[1]:
-          viewingAllTickets = False
+def main():
+  while not done:
+    inputOption = getInput(mainPrompt, mainOptions)
 
-      elif pageCounter == 0 and r['meta']['has_more']:
-        print(allTicketsPrompt2)
-        inputAllTickets = input()
-        while inputAllTickets not in viewingAllTicketsOptions[1:]:
-          print(allTicketsPrompt2)
-          inputAllTickets = input()
-        if inputAllTickets == viewingAllTicketsOptions[1]:
-          viewingAllTickets = False
-        elif inputAllTickets == viewingAllTicketsOptions[2]:
-          pageCounter += 1
-          r = (requests.get(r["links"]["next"], auth=(USER_NAME, API_TOKEN))).json()
-          continue
+    # Quit application
+    if inputOption == mainOptions[2]:
+      done = True
 
-      elif pageCounter > 0 and r['meta']['has_more']:
-        print(allTicketsPrompt3)
-        inputAllTickets = input()
-        while inputAllTickets not in viewingAllTicketsOptions:
-          print(allTicketsPrompt3)
-          inputAllTickets = input()
-        if inputAllTickets == viewingAllTicketsOptions[1]:
-          viewingAllTickets = False
-        elif inputAllTickets == viewingAllTicketsOptions[2]:
-          pageCounter += 1
-          r = (requests.get(r["links"]["next"], auth=(USER_NAME, API_TOKEN))).json()
-          continue
-        elif inputAllTickets == viewingAllTicketsOptions[0]:
-          pageCounter -= 1
-          r = (requests.get(r["links"]["prev"], auth=(USER_NAME, API_TOKEN))).json()
-          continue
+    # View all tickets
+    elif inputOption == mainOptions[0]:
+      r = getJsonData(allTicketsUrl)
+      pageCounter = 0
+      viewingAllTickets = True
+      while viewingAllTickets:
+        printTickets(r['tickets'], True)
 
-      elif pageCounter > 0 and not r['meta']['has_more']:
-        print(allTicketsPrompt4)
-        inputAllTickets = input()
-        while inputAllTickets not in viewingAllTicketsOptions[:2]:
-          print(allTicketsPrompt4)
-          inputAllTickets = input()
-        if inputAllTickets == viewingAllTicketsOptions[1]:
-          viewingAllTickets = False
-        elif inputAllTickets == viewingAllTicketsOptions[0]:
-          pageCounter -= 1
-          r = (requests.get(r["links"]["prev"], auth=(USER_NAME, API_TOKEN))).json()
-          continue
-  elif inputOption == options[2]:
-    viewingIndivTicket = True
-    while viewingIndivTicket:
-      print(individualTicketPrompt1)
-      inputIndivTicket = input()
-      while not inputIndivTicket.isdigit():
-        print(individualTicketPrompt1)
-        inputIndivTicket = input()
-      url = f"https://zcc2793.zendesk.com/api/v2/search.json?query={inputIndivTicket}"
-      r = (requests.get(url, auth=(USER_NAME, API_TOKEN))).json()
-      print(f"{r} \n")
-      print(individualTicketPrompt2)
-      inputIndivTicket = input()
-      while inputIndivTicket not in viewingAllTicketsOptions[:2]:
-        print(individualTicketPrompt2)
-        inputIndivTicket = input()
-      if inputIndivTicket == viewingAllTicketsOptions[1]:
-        viewingIndivTicket = False
-      
+        # Only one page of tickets are available  
+        if pageCounter == 0 and not r['meta']['has_more']:
+          inputAllTickets = getInput(allTicketsPrompt1, viewingTicketsOptions[1])
+          if inputAllTickets == viewingTicketsOptions[1]:
+            viewingAllTickets = False
+
+        # On the first page and more pages are available 
+        elif pageCounter == 0 and r['meta']['has_more']:
+          inputAllTickets = getInput(allTicketsPrompt2, viewingTicketsOptions[1:])
+          if inputAllTickets == viewingTicketsOptions[1]:
+            viewingAllTickets = False
+          elif inputAllTickets == viewingTicketsOptions[2]:
+            pageCounter += 1
+            r = getJsonData(r["links"]["next"])
+            continue
+
+        # Past the first page and more pages are available
+        elif pageCounter > 0 and r['meta']['has_more']:
+          inputAllTickets = getInput(allTicketsPrompt3, viewingTicketsOptions)
+          if inputAllTickets == viewingTicketsOptions[1]:
+            viewingAllTickets = False
+          elif inputAllTickets == viewingTicketsOptions[2]:
+            pageCounter += 1
+            r = getJsonData(r["links"]["next"])
+            continue
+          elif inputAllTickets == viewingTicketsOptions[0]:
+            pageCounter -= 1
+            r = getJsonData(r["links"]["prev"])
+            continue
+        
+        # On the last page of results
+        elif pageCounter > 0 and not r['meta']['has_more']:
+          inputAllTickets = getInput(allTicketsPrompt4, viewingTicketsOptions[:2])
+          if inputAllTickets == viewingTicketsOptions[1]:
+            viewingAllTickets = False
+          elif inputAllTickets == viewingTicketsOptions[0]:
+            pageCounter -= 1
+            r = getJsonData(r["links"]["prev"])
+            continue
+
+    # View an individual ticket
+    elif inputOption == mainOptions[1]:
+      viewingIndivTicket = True
+      while viewingIndivTicket:
+        inputIndivTicket = getInput(individualTicketPrompt1, DIGIT)
+        url = f"https://zcc2793.zendesk.com/api/v2/search.json?query={inputIndivTicket}"
+        r = getJsonData(url)
+        if r['count'] == 0:
+          print(individualTicketPrompt2)
+        else:
+          printTickets(r['results'], False)
+        inputIndivTicket = getInput(individualTicketPrompt3, viewingTicketsOptions[:2])
+        if inputIndivTicket == viewingTicketsOptions[1]:
+          viewingIndivTicket = False
+
+if __name__ == '__main__':
+    main()

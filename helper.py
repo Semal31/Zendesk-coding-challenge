@@ -1,4 +1,3 @@
-import textwrap
 from tabulate import tabulate
 
 def getInput(prompt, constraint):
@@ -43,6 +42,8 @@ def printTickets(tickets, allTicketsView):
       formattedTickets['Priority'] = [tickets[0]['priority']]
       formattedTickets['Status'] = [tickets[0]['status']]
       formattedTickets['Subject'] = [tickets[0]['subject']]
+      formattedTickets['Has Incidents'] = [tickets[0]['has_incidents']]
+      formattedTickets['Due At'] = [tickets[0]['due_at']]
     except KeyError:
       error = True
       print("****PROGRAM ERROR: Correct formatted data not received from API call****")

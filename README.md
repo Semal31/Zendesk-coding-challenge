@@ -34,9 +34,9 @@ The options are as follows:
 ```
 4. Format of viewing an individual ticket:
 ```
-  ID  Created At            Updated At            Type      Priority    Status    Subject
-----  --------------------  --------------------  --------  ----------  --------  ------------------------------
-   1  2021-11-26T18:24:43Z  2021-11-26T18:24:43Z  incident  normal      open      Sample ticket: Meet the ticket
+  ID  Created At            Updated At            Type    Priority    Status    Subject                                        Has Incidents    Due At
+----  --------------------  --------------------  ------  ----------  --------  ---------------------------------------------  ---------------  --------
+   2  2021-11-26T18:41:26Z  2021-11-26T18:41:26Z  N/A     N/A         open      velit eiusmod reprehenderit officia cupidatat  False            N/A
 ```
 - then you may input 'd' to view the description
 

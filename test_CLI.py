@@ -62,7 +62,9 @@ def test_printTickets_indivTicketsView_correct(capsys):
       "type": None,
       "subject": "velit eiusmod reprehenderit officia cupidatat",
       "priority": None,
-      "status": "open"
+      "status": "open",
+      "has_incidents": False,
+      "due_at": None,
     }
   ]
   textFile = open("Test_Files/indivTicketView_test.txt", "r")

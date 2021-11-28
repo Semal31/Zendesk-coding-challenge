@@ -98,6 +98,10 @@ def main():
         r = getJsonData(url)
         if r['count'] == 0:
           print(individualTicketPrompt2)
+          inputIndivTicket = getInput(individualTicketPrompt4, viewingTicketsOptions[:2])
+          if inputIndivTicket == viewingTicketsOptions[1]:
+            viewingIndivTicket = False
+          continue
         else:
           printTickets(r['results'], False)
         inputIndivTicket = getInput(individualTicketPrompt3, viewingTicketsOptions[:2] + [viewingTicketsOptions[3]])

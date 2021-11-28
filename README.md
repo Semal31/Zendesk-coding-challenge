@@ -14,7 +14,7 @@ $ pip3 install -r requirements.txt
 ```shell
 $ python3 main.py
 ```
-- **NOTE:** When running the program make sure the shell window is wide (if the format does not look right or match the format below you will need it wider)
+- **NOTE:** When running the program if the format of the table does not look right or match the format below you will need the shell wider
   - There is an issue where the text will not wrap correctly if the shell window length is not wide enough 
 2. If the program connected to the API correctly you should get the welcome message:
 ```
@@ -34,15 +34,11 @@ The options are as follows:
 ```
 4. Format of viewing an individual ticket:
 ```
-  ID  Created At            Updated At            Type      Priority    Status    Subject                         Description
-----  --------------------  --------------------  --------  ----------  --------  ------------------------------  ---------------------------
-   1  2021-11-26T18:24:43Z  2021-11-26T18:24:43Z  incident  normal      open      Sample ticket: Meet the ticket  Hi there,  I’m sending an
-                                                                                                                  email because I’m having a
-                                                                                                                  problem setting up your new
-                                                                                                                  product. Can you help me
-                                                                                                                  troubleshoot?  Thanks,  The
-                                                                                                                  Customer
+  ID  Created At            Updated At            Type      Priority    Status    Subject
+----  --------------------  --------------------  --------  ----------  --------  ------------------------------
+   1  2021-11-26T18:24:43Z  2021-11-26T18:24:43Z  incident  normal      open      Sample ticket: Meet the ticket
 ```
+- then you may input 'd' to view the description
 
 ## Testing
 1. Automated testing is done through Github Actions:

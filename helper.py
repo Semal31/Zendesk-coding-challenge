@@ -43,10 +43,21 @@ def printTickets(tickets, allTicketsView):
       formattedTickets['Priority'] = [tickets[0]['priority']]
       formattedTickets['Status'] = [tickets[0]['status']]
       formattedTickets['Subject'] = [tickets[0]['subject']]
-      formattedTickets['Description'] = ['\n'.join(textwrap.wrap(tickets[0]['description'], width=30))]
     except KeyError:
       error = True
       print("****PROGRAM ERROR: Correct formatted data not received from API call****")
       
   if not error:
     print(tabulate(formattedTickets, headers='keys', missingval='N/A'))
+
+def printDescription(ticket):
+  error = False
+  try:
+    description = ticket[0]['description']
+  except KeyError:
+    error = True
+    print("****PROGRAM ERROR: Correct formatted data not received from API call****")
+
+  if not error:
+    print(f"\n {description} \n")
+  

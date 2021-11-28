@@ -24,14 +24,15 @@ def main():
   done = False
   mainPrompt = "Welcome to the ticket viewer V1\nThe options are as follows:\n    'a' to view all tickets\n    'i' to select an individual ticket to view\n    'q' to quit the application"
   mainOptions = ['a', 'i', 'q']
-  allTicketsPrompt1 = "'q' to return to the main menu"
-  allTicketsPrompt2 = "'2' for the next page || 'q' to return to the main menu"
-  allTicketsPrompt3 = "'1' for the previous page || '2' for the next page || 'q' to return to the main menu"
-  allTicketsPrompt4 = "'1' for the previous page || 'q' to return to the main menu"
-  individualTicketPrompt1 = "What is the id of the ticket you would like to view?"
-  individualTicketPrompt2 = "No ticket with this id found."
-  individualTicketPrompt3 = "'1' to input another ticket id to view || 'q' to return to the main menu"
-  viewingTicketsOptions = ['1', 'q', '2']
+  allTicketsPrompt1 = "\n'q' to return to the main menu"
+  allTicketsPrompt2 = "\n'2' for the next page || 'q' to return to the main menu"
+  allTicketsPrompt3 = "\n'1' for the previous page || '2' for the next page || 'q' to return to the main menu"
+  allTicketsPrompt4 = "\n'1' for the previous page || 'q' to return to the main menu"
+  individualTicketPrompt1 = "\nWhat is the id of the ticket you would like to view?"
+  individualTicketPrompt2 = "\nNo ticket with this id found."
+  individualTicketPrompt3 = "\n'd' to view the description of the ticket || '1' to input another ticket id to view || 'q' to return to the main menu"
+  individualTicketPrompt4 = "\n'1' to input another ticket id to view || 'q' to return to the main menu"
+  viewingTicketsOptions = ['1', 'q', '2', 'd']
 
   while not done:
     inputOption = getInput(mainPrompt, mainOptions)
@@ -56,7 +57,7 @@ def main():
 
         # On the first page and more pages are available 
         elif pageCounter == 0 and r['meta']['has_more']:
-          inputAllTickets = getInput(allTicketsPrompt2, viewingTicketsOptions[1:])
+          inputAllTickets = getInput(allTicketsPrompt2, viewingTicketsOptions[1:3])
           if inputAllTickets == viewingTicketsOptions[1]:
             viewingAllTickets = False
           elif inputAllTickets == viewingTicketsOptions[2]:
@@ -66,7 +67,7 @@ def main():
 
         # Past the first page and more pages are available
         elif pageCounter > 0 and r['meta']['has_more']:
-          inputAllTickets = getInput(allTicketsPrompt3, viewingTicketsOptions)
+          inputAllTickets = getInput(allTicketsPrompt3, viewingTicketsOptions[:3])
           if inputAllTickets == viewingTicketsOptions[1]:
             viewingAllTickets = False
           elif inputAllTickets == viewingTicketsOptions[2]:
@@ -99,9 +100,14 @@ def main():
           print(individualTicketPrompt2)
         else:
           printTickets(r['results'], False)
-        inputIndivTicket = getInput(individualTicketPrompt3, viewingTicketsOptions[:2])
+        inputIndivTicket = getInput(individualTicketPrompt3, viewingTicketsOptions[:2] + [viewingTicketsOptions[3]])
         if inputIndivTicket == viewingTicketsOptions[1]:
           viewingIndivTicket = False
+        elif inputIndivTicket == viewingTicketsOptions[3]:
+          printDescription(r['results'])
+          inputIndivTicket = getInput(individualTicketPrompt4, viewingTicketsOptions[:2])
+          if inputIndivTicket == viewingTicketsOptions[1]:
+            viewingIndivTicket = False
 
 if __name__ == '__main__':
     main()

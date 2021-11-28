@@ -9,29 +9,29 @@ USER_NAME = os.environ.get("API_USER")
 API_TOKEN = os.environ.get("API_TOKEN")
 DIGIT = 'digit'
 
-allTicketsUrl = "https://zcc2793.zendesk.com/api/v2/tickets.json?page[size]=25"
-r = requests.get(allTicketsUrl, auth=(USER_NAME, API_TOKEN))
-if r.status_code != 200:
-  print("Cannot establish a connection to the api right now. Please check the authorization credentials or try again later")
-  exit(1)
-r = r.json()
-
-done = False
-mainPrompt = "Welcome to the ticket viewer V1\nThe options are as follows:\n    'a' to view all tickets\n    'i' to select an individual ticket to view\n    'q' to quit the application"
-mainOptions = ['a', 'i', 'q']
-allTicketsPrompt1 = "'q' to return to the main menu"
-allTicketsPrompt2 = "'2' for the next page || 'q' to return to the main menu"
-allTicketsPrompt3 = "'1' for the previous page || '2' for the next page || 'q' to return to the main menu"
-allTicketsPrompt4 = "'1' for the previous page || 'q' to return to the main menu"
-individualTicketPrompt1 = "What is the id of the ticket you would like to view?"
-individualTicketPrompt2 = "No ticket with this id found."
-individualTicketPrompt3 = "'1' to input another ticket id to view || 'q' to return to the main menu"
-viewingTicketsOptions = ['1', 'q', '2']
-
 def getJsonData(link):
   return (requests.get(link, auth=(USER_NAME, API_TOKEN))).json()
 
 def main():
+  allTicketsUrl = "https://zcc2793.zendesk.com/api/v2/tickets.json?page[size]=25"
+  r = requests.get(allTicketsUrl, auth=(USER_NAME, API_TOKEN))
+  if r.status_code != 200:
+    print("Cannot establish a connection to the api right now. Please check the authorization credentials or try again later")
+    exit(1)
+  r = r.json()
+
+  done = False
+  mainPrompt = "Welcome to the ticket viewer V1\nThe options are as follows:\n    'a' to view all tickets\n    'i' to select an individual ticket to view\n    'q' to quit the application"
+  mainOptions = ['a', 'i', 'q']
+  allTicketsPrompt1 = "'q' to return to the main menu"
+  allTicketsPrompt2 = "'2' for the next page || 'q' to return to the main menu"
+  allTicketsPrompt3 = "'1' for the previous page || '2' for the next page || 'q' to return to the main menu"
+  allTicketsPrompt4 = "'1' for the previous page || 'q' to return to the main menu"
+  individualTicketPrompt1 = "What is the id of the ticket you would like to view?"
+  individualTicketPrompt2 = "No ticket with this id found."
+  individualTicketPrompt3 = "'1' to input another ticket id to view || 'q' to return to the main menu"
+  viewingTicketsOptions = ['1', 'q', '2']
+
   while not done:
     inputOption = getInput(mainPrompt, mainOptions)
 
